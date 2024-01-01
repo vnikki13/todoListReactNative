@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StatusBar, setStatusBarStyle } from 'expo-status-bar';
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Keyboard } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Keyboard, SafeAreaView, ScrollView } from 'react-native';
 
 import Task from './components/Task';
 
@@ -21,24 +21,25 @@ export default function App() {
   }
     
   return (
-    <View style={styles.container}>
-      {/* Today's Tasks */}
-      <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>Today's Tasks</Text>
-        <View style={styles.items}>
-          {/* Tasks will go here */}
-          {
-            taskItems.map((item, index) => {
-              return (
-                <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                  <Task text={item} />
-                </TouchableOpacity>
-              )
-            })
-          } 
+    <SafeAreaView style={styles.safeContainer}>
+      <ScrollView style={styles.scrollView}>
+        {/* Today's Tasks */}
+        <View style={styles.tasksWrapper}>
+          <Text style={styles.sectionTitle}>Today's Tasks</Text>
+          <View style={styles.items}>
+            {/* Tasks will go here */}
+            {
+              taskItems.map((item, index) => {
+                return (
+                  <TouchableOpacity key={index} onPress={() => completeTask(index)}>
+                    <Task text={item} />
+                  </TouchableOpacity>
+                )
+              })
+            }
+          </View>
         </View>
-      </View>
-
+      </ScrollView>
       {/* Write a task */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -51,14 +52,18 @@ export default function App() {
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeContainer: {
     flex: 1,
+    paddingTop: StatusBar.currentHeight,
     backgroundColor: '#E8EAED',
+  },
+  scrollView: {
+    marginHorizontal: 20,
   },
   tasksWrapper: {
     paddingTop: 80,
@@ -72,8 +77,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   writeTaskWrapper: {
-    position: 'absolute',
-    bottom: 60,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
